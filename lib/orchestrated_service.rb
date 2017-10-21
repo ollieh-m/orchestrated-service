@@ -7,9 +7,4 @@ require "orchestrated_service/orchestrate"
 require "orchestrated_service/service"
 
 module OrchestratedService
-
-  Config = {
-    step_wrapper: StepsWrappers::Default
-  }
-
 end

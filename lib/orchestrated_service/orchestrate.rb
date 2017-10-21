@@ -1,14 +1,14 @@
 module OrchestratedService
   module Orchestrate
+    def wrapper
+      StepsWrappers::Default
+    end
+
     def steps(*steps)
       @result = {}
 
       begin
-        Config[:step_wrapper].perform do
-        # if Config[:step_wrapper] is set to StepsWrappers::ActiveRecord this block will be called in an ActiveRecord::Base.transaction
-        # need to test that otherwise default wrapper calls block
-        # need to work out how to set config
-        # need to test that gem works with active record adapter
+        wrapper.perform do
           # perform each step and update @result with the result from the step
           # if a step fails, stop running through steps
           # and raise an error to rollback database commits from previous steps
