@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
       a step somewhere entirely separate and reusable, in another service object (that could
       itself use the steps method to orchestrate its tasks!)
     EOF
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/ollieh-m/orchestrated-service"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
