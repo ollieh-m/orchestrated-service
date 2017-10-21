@@ -2,8 +2,8 @@ module OrchestratedService
   module StepsWrappers
 
     class Default
-      def self.perform(&block)
-        block.call
+      def self.perform
+        yield
       end
     end
 

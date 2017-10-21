@@ -1,13 +1,12 @@
 require 'spec_helper'
-require_relative 'example_orchestrated_services/all_steps_succeed'
-require_relative 'example_orchestrated_services/step_fails'
-require_relative 'example_orchestrated_services/uses_previous_results'
-require_relative 'example_orchestrated_services/nested_steps_success'
-require_relative 'example_orchestrated_services/nested_steps_fail'
-require_relative 'example_orchestrated_services/roll_back'
-require_relative 'example_orchestrated_services/nested_soft_stop'
+require_relative '../example_orchestrated_services/all_steps_succeed'
+require_relative '../example_orchestrated_services/step_fails'
+require_relative '../example_orchestrated_services/uses_previous_results'
+require_relative '../example_orchestrated_services/nested_steps_success'
+require_relative '../example_orchestrated_services/nested_steps_fail'
+require_relative '../example_orchestrated_services/nested_soft_stop'
 
-RSpec.describe 'Service including orchestrate', type: :service do
+RSpec.describe 'Service including orchestrate' do
 
   context 'All steps succeed' do
     let!(:called){ AllStepsSucceed.call({param_1: 1}) }
@@ -99,22 +98,6 @@ RSpec.describe 'Service including orchestrate', type: :service do
       end
     end
   end
-
-  # context 'A failed step rolls back any database commits that had been made in previous steps' do
-  #   let!(:called){ RollBack.call({param_1: 1}) }
-
-  #   it 'Does not write to the database' do
-  #     expect(User.all.count).to eq 0
-  #   end
-
-  #   it 'Cannot property retrieve a previous result if it was something committed to the database' do
-  #     begin
-  #       called.result[:first_step].reload
-  #     rescue
-  #       expect(called.result[:first_step].id).to eq nil
-  #     end
-  #   end
-  # end
 
   context 'A step can return a soft stop which prevents the next step but does not create failure' do
     let!(:called){ NestedSoftStop.call({param_1: 1}) }

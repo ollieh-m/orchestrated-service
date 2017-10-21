@@ -37,17 +37,17 @@ module OrchestratedService
     end
 
     def bubble_up_fail_from_result(result)
-      begin
-        result[:fail] || raise
-      rescue
+      if result.is_a?(Hash) && result[:fail]
+        result[:fail]
+      else
         result
       end
     end
 
     def bubble_up_success_from_result(result)
-      begin
-        result[:success] || raise
-      rescue
+      if result.is_a?(Hash) && result[:success]
+        result[:success]
+      else
         result
       end
     end
