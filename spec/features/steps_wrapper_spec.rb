@@ -3,10 +3,10 @@ require_relative '../example_orchestrated_services/all_steps_succeed'
 
 RSpec.describe 'Steps wrapped' do
 
-  context 'ActiveRecord transaction can be specified as the steps wrapper' do
+  context 'ActiveRecord transaction as the steps wrapper' do
     let(:called){ ActiveRecordWrapper.call({params_1: 1}) }
 
-    context 'The steps are carried out as the bock for a transaction' do
+    context 'The steps are carried out as the block for a transaction' do
       it 'If the transaction does not yield, the steps are not carried out' do
         allow(ActiveRecord::Base).to receive(:transaction)
         expect_any_instance_of(ActiveRecordWrapper).not_to receive :first_step
@@ -23,7 +23,7 @@ RSpec.describe 'Steps wrapped' do
     end
   end
 
-  context 'The default wrapper carries out the steps without a transaction' do
+  context 'Default steps wrapper' do
     let(:called){ AllStepsSucceed.call({params_1: 1}) }
 
     context 'The steps are carried out as a block for Default.perform' do

@@ -1,7 +1,7 @@
 module OrchestratedService
   module Orchestrate
     def wrapper
-      StepsWrappers::Default
+      OrchestratedService.configuration.wrapper
     end
 
     def steps(*steps)
