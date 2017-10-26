@@ -22,7 +22,81 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Suppose you have a controller action that needs to do a few things, like  
+1) check something can be edited  
+2) if it can be edited, check the changes in submitted params are valid  
+3) if the changes are valid, implement those changes, and  
+4) notify someone that changes were made  
+
+If you don't want to put these steps - or all the logic around when to carry them out - in your controller, you might want to use OrchestratedService. It takes responsibility for the orchestrating logic, putting that logic in one place (the OrchestratedService::Orchestrate module), away from your controllers. And it removes the implementation of each step from your controllers, putting it inside OrchestratedService::Service objects, or separate objects entirely that can be used by various OrchestratedService::Service objects.
+
+In your controller, delegate to an OrchestratedService::Service object, here called an Action.
+```
+class TeamsController < ApplicationController
+  include OrchestratedService::StandardFailure
+
+  def update
+    called = Actions::Teams::Update.call(params)
+    if called.success
+      flash[:notice] = 'Team successfully updated.'
+      redirect_to root_path
+    else
+      @update_team_form = called.result[:form]
+      handle_fail(called.result[:fail])
+    end
+  end
+end
+```
+
+Make that Action object an OrchestratedService::Service by inheriting from OrchestratedService::Service:
+```
+module Actions
+  module Teams
+    class Update < OrchestratedService::Service
+
+      def call
+        steps(
+          :check,
+          :form,
+          :update_team,
+          :notify_team_users
+        )
+      end
+
+      private
+
+      def check
+        team = Team.find_by(name: params[:team][:name])
+        if team.editable?
+          OrchestratedService::Feedback.new(result: team)
+        else
+          OrchestratedService::Feedback.new(success: false, result: 'Team cannot be edited')
+        end
+      end
+      
+      def form
+        OrchestratedService::Feedback.new(result: UpdateTeamForm.new(@result[:check]))
+      end
+
+      def update_team
+        if @result[:form].validate(params[:team]) && @result[:form].save
+          OrchestratedService::Feedback.new(result: @result[:form].model)
+        else
+          Feedback.new(success: false, result: OrchestratedService::Failure.new('Validation errors', type: :now, alert: 'Failed to create Team', next: :edit))
+        end
+      end
+
+      def notify_team_users
+        Notify.call(recipients: @result[:update_team].members, template: :team_update)
+      end
+    end
+  end
+end
+
+Here's what's going on in the above example:
+...
+
+
 
 ## Development
 
