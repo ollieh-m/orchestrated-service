@@ -1,3 +1,4 @@
+require 'spec_helper'
 require_relative '../example_orchestrated_services/active_record_wrapper'
 require_relative '../example_orchestrated_services/all_steps_succeed'
 
