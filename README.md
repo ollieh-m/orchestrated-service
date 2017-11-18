@@ -5,16 +5,12 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'orchestrated_service'
+gem 'orchestrated_service', :git => "https://github.com/ollieh-m/orchestrated-service.git"
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install orchestrated_service
 
 ## What's it for
 
